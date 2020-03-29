@@ -13,40 +13,73 @@
 
 '''
 
+import os
 import sys
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-try:
-    # https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.chrome.webdriver
-    # Needs chromedriver in the same dir (if not added to PATH)
-    driver = webdriver.Chrome(executable_path='./chromedriver')
-except:
-    print("""Could not find the chromedriver executable. Please check if it is added to the PATH variable or if it isin the current script's directory.
-    Or get it from: https://sites.google.com/a/chromium.org/chromedriver/downloads""")
-    sys.exit()
+# Enable traffic
+def enable_traffic_updates(driver):
+    actions = ActionChains(driver)
 
-driver.fullscreen_window()
+    xpath_hamburger_butt = """//*[@id="omnibox-singlebox"]/div[1]/div[1]/button"""
+    hamburger_butt = driver.find_element_by_xpath(xpath_hamburger_butt)
 
-# access the Google Maps page
-driver.get('http://maps.google.com')
-time.sleep(5)
+    actions.click(hamburger_butt)
+    actions.perform()
+    time.sleep(2)
 
-# Test
-search_box = driver.find_element_by_name('q')
-search_box.send_keys('New York' + Keys.ENTER)
-# search_box.submit()
+    xpath_traffic_button = """//*[@id="settings"]/div/div[2]/div/ul[2]/li[2]/button"""
+    traffic_butt = driver.find_element_by_xpath(xpath_traffic_button)
 
-time.sleep(3)
+    actions.click(traffic_butt)
+    actions.perform()
 
-# Clear search button
-clear_search_button = driver.find_element_by_class_name('sbcb_a')
-click_action = ActionChains(driver)
-click_action.click(clear_search_button)
-click_action.perform()
+# Initialization
+def main():
+    try:
+        # https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.chrome.webdriver
+        # Needs chromedriver in the same dir (if not added to PATH)
+        driver = webdriver.Chrome(executable_path='./chromedriver')
+    except:
+        print("""Could not find the chromedriver executable. Please check if it is added to the PATH variable or if it isin the current script's directory.
+        Or get it from: https://sites.google.com/a/chromium.org/chromedriver/downloads""")
+        sys.exit()
 
-time.sleep(5)
+    driver.fullscreen_window()
+    cwd = os.getcwd()
+    screenshot_path = os.path.join(cwd, 'Screenshots')
+    # print(screenshot_path)
+    if not os.path.exists(screenshot_path):
+        os.mkdir(screenshot_path)
 
-driver.quit()
+    # access the Google Maps page
+    driver.get('http://maps.google.com')
+    time.sleep(5)
+
+    # Test
+    enable_traffic_updates(driver)
+    time.sleep(2)
+
+    search_box = driver.find_element_by_name('q')
+    search_box.send_keys('New York' + Keys.ENTER)
+    # search_box.submit()
+
+    time.sleep(3)
+
+    # Clear search button
+    clear_search_button = driver.find_element_by_class_name('sbcb_a')
+    actions = ActionChains(driver)
+    actions.click(clear_search_button)
+    actions.perform()
+
+    time.sleep(5)
+
+    driver.save_screenshot(screenshot_path + '/nycorona.png')
+
+    driver.quit()
+
+if __name__== "__main__":
+    main()
