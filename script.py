@@ -78,6 +78,14 @@ def main():
     time.sleep(5)
 
     driver.save_screenshot(screenshot_path + '/nycorona.png')
+    time.sleep(4)
+
+    traffic_dropdown = driver.find_element_by_xpath("/html/body/jsl/div[3]/div[9]/div[23]/div[1]/div[1]/div[3]/div/div/div/span/span[1]/div/div/div/div[1]")
+    traffic_dropdown.click()
+    time.sleep(2)
+
+    ActionChains(driver).send_keys(Keys.DOWN).send_keys(Keys.ENTER).perform()
+    time.sleep(2)
 
     driver.quit()
 
