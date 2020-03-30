@@ -8,7 +8,7 @@ This has had an interesting effect on commuting patterns, since cities notorious
 
 This code does precisely that - it enables the "traffic" mode on Google Maps, views the maps of various cities and takes screenshots comparing "Live traffic" with "Typical traffic". The results look quite interesting, and moreover the list of cities can be customized!
 
-Here's a couple samples of how different the situation looks:
+Here's a couple samples showing how different the situation looks:
 
 ### Mexico city
 
